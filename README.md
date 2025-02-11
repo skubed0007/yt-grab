@@ -19,7 +19,7 @@ YTGUI is a Rust-based command-line tool for downloading YouTube videos and audio
 
 ### Installing YTGUI
 
-You can install YTGUI using the following `curl` command on linux:
+You can install YTGUI using the following `curl` command on Linux:
 
 ```sh
 curl -sSL https://raw.githubusercontent.com/yourusername/ytgui/main/install.sh | sudo bash
