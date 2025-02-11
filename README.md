@@ -22,4 +22,4 @@ ytgrab is a Rust-based command-line tool for downloading YouTube videos and audi
 You can install ytgrab using the following `curl` command on Linux:
 
 ```sh
-curl -sSL https://raw.githubusercontent.com/yourusername/ytgrab/main/install.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/skubed0007/ytgrab/main/install.sh | sudo bash
