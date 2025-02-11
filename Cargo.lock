@@ -2138,6 +2138,7 @@ dependencies = [
  "colored",
  "dirs",
  "indicatif",
+ "openssl-sys",
  "tokio",
  "yt-dlp",
 ]
