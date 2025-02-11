@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Ensure that sudo permissions are available
+echo "This script requires sudo privileges to install binaries."
+sudo -v # This will ask for the sudo password upfront
+
 echo "Grabbing yt script and binary files for ytgui..."
 
 # Define URLs for the necessary files
@@ -14,37 +18,44 @@ YT_MUSL_PATH="/usr/local/bin/ytgui-musl"
 
 # Download the yt script and make it executable
 echo "Downloading yt script..."
-curl -s -o "$YT_SCRIPT_PATH" "$YT_SCRIPT_URL"
-chmod +x "$YT_SCRIPT_PATH"
+sudo curl -s -o "$YT_SCRIPT_PATH" "$YT_SCRIPT_URL"
+sudo chmod +x "$YT_SCRIPT_PATH"
 
-# Download the appropriate binary based on user choice (either gcc or musl)
-echo "Which binary would you like to install?"
-echo "1) GCC Version"
-echo "2) MUSL Version"
-while true; do
-    read -p "Enter choice (1 or 2): " choice
-    case $choice in
-        1)
-            echo "Downloading GCC version..."
-            curl -s -o "$YT_GCC_PATH" "$YT_GCC_URL"
-            chmod +x "$YT_GCC_PATH"
-            echo "GCC version downloaded and made executable."
-            mv "$YT_GCC_PATH" /usr/local/bin/ytgui
-            break
-            ;;
-        2)
-            echo "Downloading MUSL version..."
-            curl -s -o "$YT_MUSL_PATH" "$YT_MUSL_URL"
-            chmod +x "$YT_MUSL_PATH"
-            echo "MUSL version downloaded and made executable."
-            mv "$YT_MUSL_PATH" /usr/local/bin/ytgui
-            break
-            ;;
-        *)
-            echo "Invalid choice. Please enter 1 or 2."
-            ;;
-    esac
-done
+# Function to prompt for user input with a timeout or force manual interaction
+prompt_choice() {
+    echo "Which binary would you like to install?"
+    echo "1) GCC Version"
+    echo "2) MUSL Version"
+
+    # Prompt for input
+    while true; do
+        read -p "Enter choice (1 or 2): " choice
+        case $choice in
+            1)
+                echo "Downloading GCC version..."
+                sudo curl -s -o "$YT_GCC_PATH" "$YT_GCC_URL"
+                sudo chmod +x "$YT_GCC_PATH"
+                echo "GCC version downloaded and made executable."
+                sudo mv "$YT_GCC_PATH" /usr/local/bin/ytgui
+                break
+                ;;
+            2)
+                echo "Downloading MUSL version..."
+                sudo curl -s -o "$YT_MUSL_PATH" "$YT_MUSL_URL"
+                sudo chmod +x "$YT_MUSL_PATH"
+                echo "MUSL version downloaded and made executable."
+                sudo mv "$YT_MUSL_PATH" /usr/local/bin/ytgui
+                break
+                ;;
+            *)
+                echo "Invalid choice. Please enter 1 or 2."
+                ;;
+        esac
+    done
+}
+
+# Run the prompt for binary selection
+prompt_choice
 
 # Final message
 echo "ytgui has been successfully installed and placed in /usr/local/bin/ytgui."
