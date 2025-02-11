@@ -24,7 +24,7 @@ for platform in "${!targets[@]}"; do
         echo "Build successful for $target"
         
         # Define binary name and source path
-        binary_name="ytgui"  # Replace with your binary name
+        binary_name="ytgrab"  # Replace with your binary name
         target_dir="target/$target/release"
         source_path="$target_dir/$binary_name"
         

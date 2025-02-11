@@ -2132,7 +2132,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "ytgui"
+name = "ytgrab"
 version = "0.1.0"
 dependencies = [
  "colored",
