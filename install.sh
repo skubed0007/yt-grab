@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# Ensure that sudo permissions are available
-echo "This script requires sudo privileges to install binaries."
-sudo -v # This will ask for the sudo password upfront
-
+# Ensure the script runs interactively
 echo "Grabbing yt script and binary files for ytgui..."
 
 # Define URLs for the necessary files
@@ -18,8 +15,8 @@ YT_MUSL_PATH="/usr/local/bin/ytgui-musl"
 
 # Download the yt script and make it executable
 echo "Downloading yt script..."
-sudo curl -s -o "$YT_SCRIPT_PATH" "$YT_SCRIPT_URL"
-sudo chmod +x "$YT_SCRIPT_PATH"
+curl -s -o "$YT_SCRIPT_PATH" "$YT_SCRIPT_URL"
+chmod +x "$YT_SCRIPT_PATH"
 
 # Function to prompt for user input with a timeout or force manual interaction
 prompt_choice() {
@@ -33,16 +30,16 @@ prompt_choice() {
         case $choice in
             1)
                 echo "Downloading GCC version..."
-                sudo curl -s -o "$YT_GCC_PATH" "$YT_GCC_URL"
-                sudo chmod +x "$YT_GCC_PATH"
+                curl -s -o "$YT_GCC_PATH" "$YT_GCC_URL"
+                chmod +x "$YT_GCC_PATH"
                 echo "GCC version downloaded and made executable."
                 sudo mv "$YT_GCC_PATH" /usr/local/bin/ytgui
                 break
                 ;;
             2)
                 echo "Downloading MUSL version..."
-                sudo curl -s -o "$YT_MUSL_PATH" "$YT_MUSL_URL"
-                sudo chmod +x "$YT_MUSL_PATH"
+                curl -s -o "$YT_MUSL_PATH" "$YT_MUSL_URL"
+                chmod +x "$YT_MUSL_PATH"
                 echo "MUSL version downloaded and made executable."
                 sudo mv "$YT_MUSL_PATH" /usr/local/bin/ytgui
                 break
