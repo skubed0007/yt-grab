@@ -12,10 +12,8 @@ MAGENTA='\033[0;35m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-# Debug logging functions
-DEBUG=true
+# Logging functions
 log_info()   { echo -e "${GREEN}[INFO] $1${NC}"; }
-log_debug()  { if $DEBUG; then echo -e "${CYAN}[DEBUG] $1${NC}"; fi; }
 log_warn()   { echo -e "${YELLOW}[WARN] $1${NC}"; }
 log_error()  { echo -e "${RED}[ERROR] $1${NC}"; }
 separator()  { echo -e "${MAGENTA}========================================${NC}"; }
@@ -56,14 +54,6 @@ fi
 
 separator
 log_info "Starting yt-dlp wrapper script"
-log_debug "Parsed parameters:"
-log_debug "  URL           : $URL"
-log_debug "  Max Height    : ${QUALITY:-(not set)}"
-log_debug "  Output Dir    : $SAVE_LOCATION"
-log_debug "  Format Option : $FORMAT"
-log_debug "  Audio Only    : $AUDIO_ONLY"
-log_debug "  Captions      : $CAPTIONS"
-log_debug "  Grab Metadata : $METADATA"
 separator
 
 # Create output directory if it doesn't exist
@@ -77,7 +67,6 @@ COMMAND=(yt-dlp -P "$SAVE_LOCATION" "$URL")
 log_info "Adding HTTP headers for browser emulation"
 COMMAND+=(--add-header "referer: https://www.youtube.com/")
 COMMAND+=(--user-agent "Mozilla/5.0 (X11; Linux x86_64; rv:115.0) Gecko/20100101 Firefox/115.0")
-log_debug "Headers added: referer and user-agent (Linux Firefox)"
 
 # Process download mode options
 if [[ "$AUDIO_ONLY" == true ]]; then
@@ -98,7 +87,6 @@ elif [[ -n "$QUALITY" ]]; then
     else
         FILTER_EXPR="bestvideo[height<=${QUALITY}]+bestaudio/best[height<=${QUALITY}]"
     fi
-    log_debug "Format filter expression: $FILTER_EXPR"
     COMMAND+=(-f "$FILTER_EXPR")
 fi
 
@@ -118,7 +106,7 @@ printf "%s " "${COMMAND[@]}"
 echo
 separator
 
-# Execute the command and stream its output so you can see progress/debug messages
+# Execute the command and stream its output so you can see progress messages
 log_info "Starting download..."
 "${COMMAND[@]}"
 log_info "Download complete!"
