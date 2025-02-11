@@ -28,35 +28,26 @@ print_msg "Downloading yt script..."
 curl -s -o "$YT_SCRIPT_PATH" "$YT_SCRIPT_URL"
 chmod +x "$YT_SCRIPT_PATH"
 
-# Ask for binary choice
-print_msg "Which binary would you like to install?"
-print_msg "1) GCC Version"
-print_msg "2) MUSL Version"
+# Automatically detect whether the system uses GCC or MUSL
+if ldd --version &>/dev/null; then
+    # If ldd is available, check for GCC-based systems
+    print_msg "GCC system detected."
+    download_url="$YT_GCC_URL"
+    binary_path="$YT_GCC_PATH"
+else
+    # If ldd is not available, assume a MUSL-based system
+    print_msg "MUSL system detected."
+    download_url="$YT_MUSL_URL"
+    binary_path="$YT_MUSL_PATH"
+fi
 
-while true; do
-    read -p "Enter choice (1 or 2): " choice
-    if [[ "$choice" == "1" ]]; then
-        print_msg "Downloading GCC version..."
-        curl -s -o "$YT_GCC_PATH" "$YT_GCC_URL"
-        chmod +x "$YT_GCC_PATH"
-        print_msg "GCC version downloaded and made executable."
-        
-        # Moving the binary to the right location
-        sudo mv "$YT_GCC_PATH" /usr/local/bin/ytgui
-        break
-    elif [[ "$choice" == "2" ]]; then
-        print_msg "Downloading MUSL version..."
-        curl -s -o "$YT_MUSL_PATH" "$YT_MUSL_URL"
-        chmod +x "$YT_MUSL_PATH"
-        print_msg "MUSL version downloaded and made executable."
-        
-        # Moving the binary to the right location
-        sudo mv "$YT_MUSL_PATH" /usr/local/bin/ytgui
-        break
-    else
-        print_error "Invalid choice. Please enter 1 or 2."
-    fi
-done
+# Download the appropriate binary
+print_msg "Downloading the appropriate binary..."
+curl -s -o "$binary_path" "$download_url"
+chmod +x "$binary_path"
+
+# Move the binary to the right location
+sudo mv "$binary_path" /usr/local/bin/ytgui
 
 # Final message
 print_msg "ytgui has been successfully installed and placed in /usr/local/bin/ytgui."
