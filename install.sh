@@ -21,27 +21,32 @@ chmod +x "$YT_SCRIPT_PATH"
 echo "Which binary would you like to install?"
 echo "1) GCC Version"
 echo "2) MUSL Version"
-read -p "Enter choice (1 or 2): " choice
-
-if [[ "$choice" == "1" ]]; then
-    echo "Downloading GCC version..."
-    curl -s -o "$YT_GCC_PATH" "$YT_GCC_URL"
-    chmod +x "$YT_GCC_PATH"
-    echo "GCC version downloaded and made executable."
-    mv "$YT_GCC_PATH" /usr/local/bin/ytgui
-elif [[ "$choice" == "2" ]]; then
-    echo "Downloading MUSL version..."
-    curl -s -o "$YT_MUSL_PATH" "$YT_MUSL_URL"
-    chmod +x "$YT_MUSL_PATH"
-    echo "MUSL version downloaded and made executable."
-    mv "$YT_MUSL_PATH" /usr/local/bin/ytgui
-else
-    echo "Invalid choice. Exiting..."
-    exit 1
-fi
+while true; do
+    read -p "Enter choice (1 or 2): " choice
+    case $choice in
+        1)
+            echo "Downloading GCC version..."
+            curl -s -o "$YT_GCC_PATH" "$YT_GCC_URL"
+            chmod +x "$YT_GCC_PATH"
+            echo "GCC version downloaded and made executable."
+            mv "$YT_GCC_PATH" /usr/local/bin/ytgui
+            break
+            ;;
+        2)
+            echo "Downloading MUSL version..."
+            curl -s -o "$YT_MUSL_PATH" "$YT_MUSL_URL"
+            chmod +x "$YT_MUSL_PATH"
+            echo "MUSL version downloaded and made executable."
+            mv "$YT_MUSL_PATH" /usr/local/bin/ytgui
+            break
+            ;;
+        *)
+            echo "Invalid choice. Please enter 1 or 2."
+            ;;
+    esac
+done
 
 # Final message
 echo "ytgui has been successfully installed and placed in /usr/local/bin/ytgui."
 echo "Please make sure yt-dlp is installed for better experience."
 echo "You can install yt-dlp using 'pip install yt-dlp' or 'apt install yt-dlp' (depending on your system)."
-
