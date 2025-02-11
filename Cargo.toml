@@ -1,0 +1,11 @@
+[package]
+name = "ytgui"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+colored = "3.0.0"
+dirs = "6.0.0"
+indicatif = "0.17.11"
+tokio = "1.43.0"
+yt-dlp = "1.2.3"

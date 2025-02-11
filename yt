@@ -1,0 +1,125 @@
+#!/bin/bash
+# Enhanced yt-dlp wrapper with custom progress bar and detailed debugging output
+
+set -e
+
+# Define colors for pretty printing
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+MAGENTA='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+# Debug logging functions
+DEBUG=true
+log_info()   { echo -e "${GREEN}[INFO] $1${NC}"; }
+log_debug()  { if $DEBUG; then echo -e "${CYAN}[DEBUG] $1${NC}"; fi; }
+log_warn()   { echo -e "${YELLOW}[WARN] $1${NC}"; }
+log_error()  { echo -e "${RED}[ERROR] $1${NC}"; }
+separator()  { echo -e "${MAGENTA}========================================${NC}"; }
+
+# Function to display usage help
+show_help() {
+    echo -e "${BLUE}Usage: $0 -u <URL> -q <max_height> -o <output_dir> -f <format (mp4/webm/mp3)> -a (audio only) -c (captions) -g (grab metadata)${NC}"
+    exit 1
+}
+
+# Default values
+URL=""
+QUALITY=""
+SAVE_LOCATION="./"
+FORMAT="mp4"
+AUDIO_ONLY=false
+CAPTIONS=false
+METADATA=false
+
+# Process command-line options
+while getopts "u:q:o:f:acg" opt; do
+    case $opt in
+        u) URL="$OPTARG" ;;
+        q) QUALITY="$OPTARG" ;;
+        o) SAVE_LOCATION="$OPTARG" ;;
+        f) FORMAT="$OPTARG" ;;
+        a) AUDIO_ONLY=true ;;
+        c) CAPTIONS=true ;;
+        g) METADATA=true ;;
+        *) show_help ;;
+    esac
+done
+
+if [[ -z "$URL" ]]; then
+    log_error "URL not provided."
+    show_help
+fi
+
+separator
+log_info "Starting yt-dlp wrapper script"
+log_debug "Parsed parameters:"
+log_debug "  URL           : $URL"
+log_debug "  Max Height    : ${QUALITY:-(not set)}"
+log_debug "  Output Dir    : $SAVE_LOCATION"
+log_debug "  Format Option : $FORMAT"
+log_debug "  Audio Only    : $AUDIO_ONLY"
+log_debug "  Captions      : $CAPTIONS"
+log_debug "  Grab Metadata : $METADATA"
+separator
+
+# Create output directory if it doesn't exist
+log_info "Ensuring output directory exists: $SAVE_LOCATION"
+mkdir -p "$SAVE_LOCATION"
+
+# Build the base yt-dlp command
+COMMAND=(yt-dlp -P "$SAVE_LOCATION" "$URL")
+
+# Add extra HTTP headers to mimic a browser (helps avoid HTTP 403 errors)
+log_info "Adding HTTP headers for browser emulation"
+COMMAND+=(--add-header "referer: https://www.youtube.com/")
+COMMAND+=(--user-agent "Mozilla/5.0 (X11; Linux x86_64; rv:115.0) Gecko/20100101 Firefox/115.0")
+log_debug "Headers added: referer and user-agent (Linux Firefox)"
+
+# Process download mode options
+if [[ "$AUDIO_ONLY" == true ]]; then
+    log_info "Audio-only mode enabled"
+    COMMAND+=(-f bestaudio)
+    if [[ "$FORMAT" == "mp3" ]]; then
+        log_info "Converting audio to mp3 format"
+        COMMAND+=(--audio-format mp3 --extract-audio)
+    fi
+elif [[ -n "$QUALITY" ]]; then
+    log_info "Quality filter enabled: max height = ${QUALITY}px"
+    # Build a filter expression based on the desired quality and format.
+    if [[ "$FORMAT" == "mp4" ]]; then
+        # Force MP4 for video and m4a for audio
+        FILTER_EXPR="bestvideo[height<=${QUALITY}][ext=mp4]+bestaudio[ext=m4a]/best[height<=${QUALITY}][ext=mp4]"
+    elif [[ "$FORMAT" == "webm" ]]; then
+        FILTER_EXPR="bestvideo[height<=${QUALITY}][ext=webm]+bestaudio/best[height<=${QUALITY}][ext=webm]"
+    else
+        FILTER_EXPR="bestvideo[height<=${QUALITY}]+bestaudio/best[height<=${QUALITY}]"
+    fi
+    log_debug "Format filter expression: $FILTER_EXPR"
+    COMMAND+=(-f "$FILTER_EXPR")
+fi
+
+if [[ "$CAPTIONS" == true ]]; then
+    log_info "Captions enabled (auto-subtitles in English)"
+    COMMAND+=(--write-auto-sub --sub-lang en)
+fi
+
+if [[ "$METADATA" == true ]]; then
+    log_info "Metadata extraction enabled (info JSON and thumbnail)"
+    COMMAND+=(--write-info-json --write-thumbnail)
+fi
+
+separator
+log_info "Final yt-dlp command constructed:"
+printf "%s " "${COMMAND[@]}"
+echo
+separator
+
+# Execute the command and stream its output so you can see progress/debug messages
+log_info "Starting download..."
+"${COMMAND[@]}"
+log_info "Download complete!"
+separator
