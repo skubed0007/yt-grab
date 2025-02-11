@@ -16,27 +16,8 @@ async fn main() {
     println!("{}", "========================================".dimmed().blue());
     println!("{}", "          YT_Downloader".bold().cyan());
     println!("{}", "========================================".dimmed().blue());
-    println!(
-        "{}",
-        "Shall I use the built-in yt-dlp (it is very slow in downloading at the moment)?\n\
-         If no, then I will try to run the \"yt\" command bash script from the repo.\n\
-         You can download the bash file named \"yt\" from the repo and place it in your /usr/bin or /usr/local/bin.".yellow()
-    );
-    let mut ans = String::new();
-    print!("{}", "yes or no > ".bold().green());
-    stdout().flush().unwrap();
-    stdin().read_line(&mut ans).unwrap();
     
-    let use_cyt = match ans.trim().to_lowercase().as_str() {
-        "yes" => {
-            println!("{}", "Using built-in yt-dlp command.".green());
-            true
-        },
-        _ => {
-            println!("{}", "Proceeding with alternative yt command.".red());
-            false
-        }
-    };
+    let use_cyt = false;
     println!("{}", "Enter YouTube links (type 'done' to finish):".bold().yellow());
 
     let mut links = Vec::new();
