@@ -26,7 +26,7 @@ YT_MUSL_PATH="/usr/local/bin/ytgui-musl"
 # Download the yt script and make it executable
 print_msg "Downloading yt script..."
 curl -s -o "$YT_SCRIPT_PATH" "$YT_SCRIPT_URL"
-chmod +x "$YT_SCRIPT_PATH"
+sudo chmod +x "$YT_SCRIPT_PATH"
 
 # Automatically detect whether the system uses GCC or MUSL
 if ldd --version &>/dev/null; then
@@ -44,7 +44,7 @@ fi
 # Download the appropriate binary
 print_msg "Downloading the appropriate binary..."
 curl -s -o "$binary_path" "$download_url"
-chmod +x "$binary_path"
+sudo chmod +x "$binary_path"
 
 # Move the binary to the right location
 sudo mv "$binary_path" /usr/local/bin/ytgui
