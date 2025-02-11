@@ -24,9 +24,16 @@ prompt_choice() {
     echo "1) GCC Version"
     echo "2) MUSL Version"
 
-    # Prompt for input
+    # Debugging: Ensure we are getting to the prompt
+    echo "Prompting for choice..."
     while true; do
+        # Debugging: Print to verify input handling
+        echo "Waiting for user input..."
+        
+        # Capture input
         read -p "Enter choice (1 or 2): " choice
+        echo "User entered: $choice"  # Debugging: Show input
+        
         case $choice in
             1)
                 echo "Downloading GCC version..."
