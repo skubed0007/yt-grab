@@ -1,6 +1,6 @@
-# YTGUI
+# ytgrab
 
-YTGUI is a Rust-based command-line tool for downloading YouTube videos and audio using `yt-dlp`. It provides an enhanced wrapper around `yt-dlp` with custom progress bars and detailed debugging output.
+ytgrab is a Rust-based command-line tool for downloading YouTube videos and audio using `yt-dlp`. It provides an enhanced wrapper around `yt-dlp` with custom progress bars and detailed debugging output.
 
 ## Features
 
@@ -17,9 +17,9 @@ YTGUI is a Rust-based command-line tool for downloading YouTube videos and audio
 - Rust and Cargo installed on your system
 - `yt-dlp` installed and available in your system's PATH
 
-### Installing YTGUI
+### Installing ytgrab
 
-You can install YTGUI using the following `curl` command on Linux:
+You can install ytgrab using the following `curl` command on Linux:
 
 ```sh
-curl -sSL https://raw.githubusercontent.com/yourusername/ytgui/main/install.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/yourusername/ytgrab/main/install.sh | sudo bash

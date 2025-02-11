@@ -9,7 +9,8 @@ declare -A targets=(
 # Create the output directory (bins folder)
 output_dir="bins"
 mkdir -p "$output_dir"
-
+rm -rf ./bins
+mkdir bins
 # Build for each target
 for platform in "${!targets[@]}"; do
     target="${targets[$platform]}"
@@ -32,16 +33,16 @@ for platform in "${!targets[@]}"; do
             # Determine the short name for the binary
             case "$platform" in
                 "musl-linux")
-                    short_name="ytgui-musl"
+                    short_name="ytgrab-musl"
                     ;;
                 "gcc-linux")
-                    short_name="ytgui-gcc"
+                    short_name="ytgrab-gcc"
                     ;;
                 "windows-x86")
-                    short_name="ytgui-win32.exe"
+                    short_name="ytgrab-win32.exe"
                     ;;
                 "windows-x64")
-                    short_name="ytgui-win64.exe"
+                    short_name="ytgrab-win64.exe"
                     ;;
                 *)
                     echo "Unknown platform: $platform"
