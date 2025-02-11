@@ -32,16 +32,16 @@ for platform in "${!targets[@]}"; do
             # Determine the short name for the binary
             case "$platform" in
                 "musl-linux")
-                    short_name="ytdgui-musl"
+                    short_name="ytgui-musl"
                     ;;
                 "gcc-linux")
-                    short_name="ytdgui-linux"
+                    short_name="ytgui-gcc"
                     ;;
                 "windows-x86")
-                    short_name="ytdgui-win32.exe"
+                    short_name="ytgui-win32.exe"
                     ;;
                 "windows-x64")
-                    short_name="ytdgui-win64.exe"
+                    short_name="ytgui-win64.exe"
                     ;;
                 *)
                     echo "Unknown platform: $platform"
